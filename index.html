@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan2Eat Dashboard</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #4CAF50;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    /* Table and List Styles */
+    table {
+      width: 80%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f5f5f5;
+      color: #333;
+      font-weight: bold;
+    }
+
+    td {
+      background-color: #fff;
+    }
+
+    td.pending {
+      color: red;
+      font-weight: bold;
+    }
+
+    td.status {
+      color: green;
+      font-weight: bold;
+    }
+
+    /* Button Styling */
+    .pay-button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+      font-size: 14px;
+    }
+
+    .pay-button:hover {
+      background-color: #218838;
+    }
+
+    .pay-button:disabled {
+      background-color: gray;
+      cursor: not-allowed;
+    }
+
+    /* List Styling */
+    ul {
+      width: 80%;
+      margin-bottom: 20px;
+      padding: 0;
+      list-style: none;
+    }
+
+    ul li {
+      background-color: #fff;
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Section Styling */
+    section {
+      width: 80%;
+      max-width: 1000px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    /* Layout Styling */
+    #availableTables {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    #totalRevenue {
+      font-size: 22px;
+      color: #4CAF50;
+      font-weight: bold;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      table, ul {
+        width: 100%;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      h2 {
+        font-size: 1.5em;
+      }
+
+      .pay-button {
+        padding: 8px 16px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Scan2Eat Dashboard</h1>
+
+  <!-- จำนวนโต๊ะว่าง -->
+  <section>
+    <h2>จำนวนโต๊ะว่าง</h2>
+    <div id="availableTables">Loading...</div>
+  </section>
+
+  <!-- รายการโต๊ะที่ว่าง -->
+  <section>
+    <h2>โต๊ะที่ว่างอยู่</h2>
+    <ul id="availableTablesList">Loading...</ul>
+  </section>
+
+  <!-- สถานะการสั่งซื้อที่ยังไม่ชำระเงิน -->
+  <section>
+    <h2>รายการการสั่งซื้อที่ยังไม่ชำระเงิน</h2>
+    <table id="unpaidOrdersTable">
+      <thead>
+        <tr>
+          <th>หมายเลขโต๊ะ</th>
+          <th>รายการอาหาร</th>
+          <th>จำนวนรายการอาหาร</th>
+          <th>สถานะการชำระเงิน</th>
+          <th>ชำระเงิน</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- ข้อมูลจะถูกเติมในที่นี้ -->
+      </tbody>
+    </table>
+  </section>
+
+  <!-- เลือกวันที่เพื่อดูรายรับ -->
+  <!-- <section>
+    <h2>เลือกวันที่เพื่อดูรายรับ</h2>
+    <input type="date" id="revenueDate" onchange="fetchRevenueByDate()">
+  </section> -->
+
+  <!-- รายรับทั้งหมด -->
+  <section>
+    <h2>รายรับทั้งหมด</h2>
+    <div id="totalRevenue">Loading...</div>
+  </section>
+
+  <script>
+    const baseUrl = 'http://192.168.108.205/api'; // เปลี่ยน URL ตามที่ใช้งานจริง
+
+    // ฟังก์ชันดึงข้อมูลจำนวนโต๊ะที่ว่าง
+    async function fetchAvailableTables() {
+      try {
+        const response = await fetch(`${baseUrl}/get_available_tables.php`);
+        if (response.ok) {
+          const availableTables = await response.json();
+          document.getElementById('availableTables').innerHTML = `${availableTables.length} โต๊ะว่าง`;
+
+          const availableTablesList = document.getElementById('availableTablesList');
+          availableTablesList.innerHTML = ''; // ล้างข้อมูลก่อนหน้า
+          availableTables.forEach(table => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `โต๊ะที่ ${table.table_number}`;
+            availableTablesList.appendChild(listItem);
+          });
+        } else {
+          throw new Error('Failed to load available tables');
+        }
+      } catch (error) {
+        console.error(error);
+        document.getElementById('availableTables').innerHTML = 'ไม่สามารถโหลดข้อมูลได้';
+      }
+    }
+
+    // ฟังก์ชันดึงข้อมูลรายการการสั่งซื้อที่ยังไม่ชำระเงิน
+    async function fetchUnpaidOrders() {
+      try {
+        const response = await fetch(`${baseUrl}/get_unpaid_orders.php`);
+        if (response.ok) {
+          const unpaidOrders = await response.json();
+          const ordersTableBody = document.querySelector('#unpaidOrdersTable tbody');
+          ordersTableBody.innerHTML = ''; // ล้างข้อมูลก่อนหน้า
+
+          if (unpaidOrders && unpaidOrders.length > 0) {
+            unpaidOrders.forEach(order => {
+              const itemsList = order.items && order.items.length > 0 ? order.items.map(item => item.item_name).join(', ') : 'ไม่พบข้อมูลรายการอาหาร';
+              const itemCount = order.items ? order.items.length : 0; // จำนวนรายการอาหาร
+
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>โต๊ะที่ ${order.table_number}</td>
+                <td>${itemsList}</td>
+                <td>${itemCount} รายการ</td>
+                <td class="pending">ยังไม่ชำระ</td>
+                <td><button class="pay-button" onclick="markAsPaid(${order.order_id}, this)">ชำระเงิน</button></td>
+              `;
+              ordersTableBody.appendChild(row);
+            });
+          } else {
+            ordersTableBody.innerHTML = '<tr><td colspan="5">ไม่พบการสั่งซื้อที่ยังไม่ชำระเงิน</td></tr>';
+          }
+        } else {
+          throw new Error('Failed to load unpaid orders');
+        }
+      } catch (error) {
+        console.error(error);
+        document.querySelector('#unpaidOrdersTable tbody').innerHTML = '<tr><td colspan="5">ไม่สามารถโหลดข้อมูลได้</td></tr>';
+      }
+    }
+
+    // ฟังก์ชันการอัปเดตสถานะการชำระเงิน
+    async function markAsPaid(orderId, button) {
+      try {
+        const response = await fetch(`${baseUrl}/mark_as_paid.php`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            order_id: orderId,
+            status: 'paid'
+          })
+        });
+
+        if (response.ok) {
+          alert('ชำระเงินสำเร็จ');
+
+          const row = button.closest('tr');
+          const statusCell = row.querySelector('td:nth-child(4)');
+          const payButton = row.querySelector('button');
+
+          statusCell.textContent = 'ชำระแล้ว';
+          statusCell.classList.remove('pending');
+          statusCell.classList.add('status');
+
+          payButton.disabled = true;
+          payButton.style.backgroundColor = 'gray';
+        } else {
+          throw new Error('Failed to mark order as paid');
+        }
+      } catch (error) {
+        console.error(error);
+        alert('ไม่สามารถอัปเดตสถานะได้');
+      }
+    }
+
+    // ฟังก์ชันดึงข้อมูลรายรับทั้งหมดของร้าน
+    async function fetchTotalRevenue() {
+      try {
+        const response = await fetch(`${baseUrl}/get_total_revenue.php`);
+        if (response.ok) {
+          const revenue = await response.json();
+          if (revenue && revenue.total !== undefined) {
+            document.getElementById('totalRevenue').innerHTML = `${parseFloat(revenue.total).toFixed(2)} บาท`;
+          } else {
+            document.getElementById('totalRevenue').innerHTML = 'ไม่พบข้อมูลรายรับ';
+          }
+        } else {
+          throw new Error('Failed to load total revenue');
+        }
+      } catch (error) {
+        console.error(error);
+        document.getElementById('totalRevenue').innerHTML = 'ไม่สามารถโหลดข้อมูลได้';
+      }
+    }
+
+    // ฟังก์ชันดึงข้อมูลรายรับตามวันที่เลือก
+    async function fetchRevenueByDate() {
+      const selectedDate = document.getElementById('revenueDate').value;
+      if (!selectedDate) {
+        document.getElementById('totalRevenue').innerHTML = 'กรุณาเลือกวันที่';
+        return;
+      }
+      try {
+        const response = await fetch(`${baseUrl}/get_total_revenue.php?date=${selectedDate}`);
+        if (response.ok) {
+          const revenue = await response.json();
+          if (revenue && revenue.total !== undefined) {
+            document.getElementById('totalRevenue').innerHTML = `${parseFloat(revenue.total).toFixed(2)} บาท`;
+          } else {
+            document.getElementById('totalRevenue').innerHTML = 'ไม่พบข้อมูลรายรับในวันที่เลือก';
+          }
+        } else {
+          throw new Error('Failed to load revenue for selected date');
+        }
+      } catch (error) {
+        console.error(error);
+        document.getElementById('totalRevenue').innerHTML = 'ไม่สามารถโหลดข้อมูลได้';
+      }
+    }
+
+    // เรียกใช้ฟังก์ชันเมื่อหน้าโหลด
+    fetchAvailableTables();
+    fetchUnpaidOrders();
+    fetchTotalRevenue();
+  </script>
+</body>
+</html>
