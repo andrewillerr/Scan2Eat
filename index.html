@@ -176,7 +176,7 @@
           <th>รายการอาหาร</th>
           <th>จำนวนรายการอาหาร</th>
           <th>สถานะการชำระเงิน</th>
-          <th>ชำระเงิน</th>
+          <!-- <th>ชำระเงิน</th> -->
         </tr>
       </thead>
       <tbody>
@@ -192,13 +192,13 @@
   </section> -->
 
   <!-- รายรับทั้งหมด -->
-  <section>
+  <!-- <section>
     <h2>รายรับทั้งหมด</h2>
     <div id="totalRevenue">Loading...</div>
-  </section>
+  </section> -->
 
   <script>
-    const baseUrl = 'http://192.168.108.205/api'; // เปลี่ยน URL ตามที่ใช้งานจริง
+    const baseUrl = 'http://192.168.152.205/api'; // เปลี่ยน URL ตามที่ใช้งานจริง
 
     // ฟังก์ชันดึงข้อมูลจำนวนโต๊ะที่ว่าง
     async function fetchAvailableTables() {
@@ -244,7 +244,7 @@
                 <td>${itemsList}</td>
                 <td>${itemCount} รายการ</td>
                 <td class="pending">ยังไม่ชำระ</td>
-                <td><button class="pay-button" onclick="markAsPaid(${order.order_id}, this)">ชำระเงิน</button></td>
+                
               `;
               ordersTableBody.appendChild(row);
             });
@@ -263,7 +263,7 @@
     // ฟังก์ชันการอัปเดตสถานะการชำระเงิน
     async function markAsPaid(orderId, button) {
       try {
-        const response = await fetch(`${baseUrl}/mark_as_paid.php`, {
+        const response = await fetch(`${baseUrl}/mark_as_paid.php1`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -299,7 +299,7 @@
     // ฟังก์ชันดึงข้อมูลรายรับทั้งหมดของร้าน
     async function fetchTotalRevenue() {
       try {
-        const response = await fetch(`${baseUrl}/get_total_revenue.php`);
+        const response = await fetch(`${baseUrl}/get_total_revenue.php1`);
         if (response.ok) {
           const revenue = await response.json();
           if (revenue && revenue.total !== undefined) {
