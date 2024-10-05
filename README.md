@@ -47,7 +47,7 @@
   - `menu`: เก็บข้อมูลเมนูอาหาร (id, name, price)
 
 ## Database Schema
-```sql
+``sql
 -- Table: menu
 CREATE TABLE `menu` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -71,6 +71,7 @@ CREATE TABLE `orders` (
   `status` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`id`)
 );
+
 
 # Scan2Eat: Food Ordering System
 
