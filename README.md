@@ -46,35 +46,6 @@
   - `orders`: เก็บข้อมูลคำสั่งซื้อ (id, table_id, total_price, status)
   - `menu`: เก็บข้อมูลเมนูอาหาร (id, name, price)
 
-## Database Schema
-``sql
--- Table: menu
-CREATE TABLE `menu` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NOT NULL,
-  `price` DECIMAL(10, 2) NOT NULL,
-  PRIMARY KEY (`id`)
-);
-
--- Table: tables
-CREATE TABLE `tables` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `status` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-);
-
--- Table: orders
-CREATE TABLE `orders` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `table_id` INT NOT NULL,
-  `total_price` DECIMAL(10, 2) NOT NULL,
-  `status` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-);
-
-
-# Scan2Eat: Food Ordering System
-
 ## Installation Guide
 
 ### Prerequisites
