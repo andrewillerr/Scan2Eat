@@ -49,9 +49,11 @@
 ## Installation Guide
 
 ### Prerequisites
+- **Visual Studio Code**: ติดตั้ง VScode 
 - **Flutter**: ติดตั้ง Flutter SDK บนเครื่อง [Flutter installation guide](https://docs.flutter.dev/get-started/install)
+- **Android Studio**: ติดตั้ง Android Studio สำหรับการจำลองการใช้งานบนมือถือ
 - **PHP**: ติดตั้ง PHP เวอร์ชันล่าสุด
-- **MySQL**: ติดตั้ง MySQL สำหรับจัดการฐานข้อมูล
+- **MySQL**: ติดตั้ง MySQL สำหรับจัดการฐานข้อมูล เช่น XAMPP
 - **Arduino IDE**: สำหรับการติดตั้งบอร์ด ESP32
 
 ### Step-by-Step Installation
@@ -87,7 +89,7 @@
 
 6. **Setup ESP32**:
    - เปิดโปรแกรม Arduino IDE และติดตั้งบอร์ด ESP32
-   - อัปโหลดโค้ด ESP32 ที่ใช้สำหรับการแสดงผลจำนวนโต๊ะว่างไปยังบอร์ด
+   - อัปโหลดโค้ด ESP32 ที่ใช้สำหรับการแสดงผล (OLED) จำนวนโต๊ะว่างไปยังบอร์ด
 
 ## How to Use the System
 1. **ลูกค้าสแกน QR Code**: เพื่อเข้าสู่ระบบสั่งอาหาร ลูกค้าจะสแกน QR Code ที่โต๊ะเพื่อเลือกโต๊ะของตน
@@ -125,8 +127,8 @@
 
 ## Contributors
 - Andrewillerr - Lead Developer
-- Onny - Backend Developer
 - Realoporjung - UI/UX Designer
+- Onny - Backend Developer
 - Peare - IoT (Internet of Things) Engineer
 
 ## License
